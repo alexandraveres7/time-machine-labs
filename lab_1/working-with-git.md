@@ -17,6 +17,17 @@
         - [Adding a new `origin`](#adding-a-new-origin)
         - [Pushing code to remote server](#pushing-code-to-remote-server)
         - [Pulling code from remote server](#pulling-code-from-remote-server)
+    - [Branches](#branches)
+        - [List local and remote branches](#list-local-and-remote-branches)
+        - [Creating a new local branch](#creating-a-new-local-branch)
+        - [Pull changes from local `experimental-feature` branch to local `master` branch](#pull-changes-from-local-experimental-feature-branch-to-local-master-branch)
+        - [Push changes from local `experimental-feature` branch to remote `experimental-feature` branch](#push-changes-from-local-experimental-feature-branch-to-remote-experimental-feature-branch)
+        - [Branching is hard](#branching-is-hard)
+    - [Git diff command](#git-diff-command)
+        - [Show recent changes across project repository](#show-recent-changes-across-project-repository)
+        - [Show diff between files on same branch](#show-diff-between-files-on-same-branch)
+        - [Show diff between local `master` branch and local `experimental-feature` branch](#show-diff-between-local-master-branch-and-local-experimental-feature-branch)
+    - [Patch files](#patch-files)
 
 <!-- /TOC -->
 ## What is Git?
@@ -98,6 +109,7 @@ $ git commit -m "first commit message" # git commit --message <msg>
 ```
 
 Good work! You now have your first commit on this **git local repository**.
+
 Now that you know how to make commits, add a couple more before moving to the next section. Change `hello.txt` and `world.txt` contents and commit changes.
 
 ### Viewing history
@@ -163,7 +175,7 @@ $ # press insert
 
 Copy and paste the following lines:
 
-```ini
+```txt
 always_ignored.txt
 
 # ignore all hiden files
@@ -242,3 +254,138 @@ $ git pull origin master # or just "git pull"
 
 All changes are now downloaded from the github server and saved locally.
 See `git history` of what has changed.
+
+## Branches
+
+We have been working with branches all this time and not know it.
+Branches are **modified or exact copies** of your code, stored in git.
+
+Let's say we want to add an experimental feature to our project but also continue working on current project without releasing the experimental feature.
+
+What do we do? Without git we would probably end up `copying` and `pasting` entire project `folder` and add changes. That is similar to creating another `branch` without using git.
+
+### List local and remote branches
+
+We can see our local branches using:
+
+```bash
+$ git branch
+```
+
+`master` will probably be displayed and it's default branch in 99% of the projects. Remote origin ( in our case github.com ) master branch can be seen using:
+
+```bash
+$ git branch --all
+```
+
+Cool.
+
+### Creating a new local branch
+
+Since we want to add changes to our local repository, we'll create a new branch.
+
+```bash
+$ git branch -c "experimental-feature"
+$ git branch
+```
+
+We've created a new branch but haven't switched to it to see the files.
+
+```bash
+$ git checkout experimental-feature
+$ git branch
+$ ls # list files
+```
+
+We've switched branches and can see all project files.
+Make some commits here, but do not push to remote.
+How does the history look like?
+
+```bash
+$ git history
+```
+
+Let's get back to our initial project branch ( master ).
+
+```bash
+$ git checkout master
+$ git history
+$ ls
+```
+
+All commited changes are not here. All changes are on the `experimental-feature` branch and `master` branch has been untouched by commits. You've learned branching!
+
+### Pull changes from local `experimental-feature` branch to local `master` branch
+
+Experimental feature is done and we need to `merge` the changes with our `master` branch.
+
+```bash
+# dot signifies local repository, you can also pull from remote server using "git pull origin master"
+$ git pull . master
+$ git history
+$ ls
+```
+
+All changes from experimental branch should be here.
+
+### Push changes from local `experimental-feature` branch to remote `experimental-feature` branch
+
+All commits and changes on our `experimental-feature` are stored locally. We can push the changes to remote server on `experimental-feature-remote` branch.
+
+```bash
+$ git checkout experimental-feature
+$ git push -u origin experimental-feature-remote
+$ git history
+```
+
+All changes have been uploaded to github.com on branch `experimental-feature-remote`. You can check it out from the github.com web interface.
+
+### Branching is hard
+
+Branching is hard and it will get easier if you keep using git.
+Here are some links on the topic.
+
+- [a successful git branching-model](https://nvie.com/posts/a-successful-git-branching-model/) ( old model, not used anymore )
+- [gitflow branching model](https://guides.github.com/introduction/flow/) ( recommended approach )
+
+## Git diff command
+
+`git diff` is one of the most helpful commands. It will display all changed lines in your project repository.
+
+### Show recent changes across project repository
+
+```bash
+$ git checkout master
+$ echo "git\n is\n awesome\n" > "good.txt"
+$ git diff
+```
+
+Added lines are usually displayed with `green` and removed lines with `red`.
+
+You can see all the changes we've made.
+
+### Show diff between files on same branch
+
+```bash
+$ git checkout master
+$ echo "git\n is\n awesome\n" > "good.txt"
+$ echo "git\n kinda\n sucks\n" > "bad.txt"
+$ git diff "good.txt" "bad.txt"
+```
+
+Commit these files to `master` branch.
+
+### Show diff between local `master` branch and local `experimental-feature` branch
+
+```bash
+$ git diff master experimental-feature
+```
+
+## Patch files
+
+You can send `git commits` by email if you need to. To do that you need to create a `patch` file with all the changes.
+
+Creating a patch is really easy.
+
+1. Use `git diff` command to get the changes
+2. Save changes to a local file
