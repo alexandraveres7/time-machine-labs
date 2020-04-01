@@ -28,6 +28,13 @@
         - [Show diff between files on same branch](#show-diff-between-files-on-same-branch)
         - [Show diff between local `master` branch and local `experimental-feature` branch](#show-diff-between-local-master-branch-and-local-experimental-feature-branch)
     - [Patch files](#patch-files)
+        - [Creating a patch file](#creating-a-patch-file)
+        - [Applying the patch ourselves](#applying-the-patch-ourselves)
+    - [Deleting branches locally and from remote server](#deleting-branches-locally-and-from-remote-server)
+        - [Delete a local branch](#delete-a-local-branch)
+        - [Delete a remote branch](#delete-a-remote-branch)
+    - [Git pull / push conflicts](#git-pull--push-conflicts)
+    - [Homework](#homework)
 
 <!-- /TOC -->
 ## What is Git?
@@ -385,7 +392,53 @@ $ git diff master experimental-feature
 
 You can send `git commits` by email if you need to. To do that you need to create a `patch` file with all the changes.
 
-Creating a patch is really easy.
+### Creating a patch file
+
+Creating a patch file is really easy.
 
 1. Use `git diff` command to get the changes
 2. Save changes to a local file
+
+```bash
+$ git diff master experimental-feature > patch_file.txt
+$ ls
+```
+
+Now you can email `patch_file.txt` to `apply` the patch.
+
+### Applying the patch ourselves
+
+```bash
+$ git apply patch_file.txt
+$ git status # see changes
+$ git commit -m "applied patch"
+$ git history
+```
+
+## Deleting branches locally and from remote server
+
+All changes to local repository can be **pushed** to remote server aka **origin**.
+
+### Delete a local branch
+
+```bash
+$ git branch
+$ git branch -d "experimental-feature" # git branch --delete "<branch>"
+$ git history
+```
+
+### Delete a remote branch
+
+Remote branches can be deleted with a similar command.
+
+```bash
+$ git push origin -d "experimental-feature"
+```
+
+## Git pull / push conflicts
+
+TBD.
+
+## Homework
+
+For every `git push` or `git pull` with a remote server, git asks for user and password. In order to skip that, add ssh key authentication.
